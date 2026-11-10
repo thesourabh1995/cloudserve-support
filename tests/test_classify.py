@@ -170,6 +170,15 @@ class TestPromptInjection:
         assert "<<<TICKET" in rendered and "TICKET>>>" in rendered
         assert "untrusted" in rendered.lower()
 
+    def test_braces_in_the_ticket_do_not_break_rendering(self):
+        """A {placeholder} in customer text must not raise during an unattended run."""
+        classifier = classifier_for(GOOD)
+        rendered = classifier.prompt.render_user(
+            channel="email", subject="s", body="use {format} and {body} literally"
+        )
+        assert "{format}" in rendered
+        assert "{body}" in rendered
+
 
 class TestRetryAndBackoff:
     def test_retryable_failures_are_retried_then_succeed(self):

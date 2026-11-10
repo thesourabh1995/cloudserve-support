@@ -33,7 +33,18 @@ class Prompt:
         return f"{self.id} v{self.version}"
 
     def render_user(self, **values) -> str:
-        return self.user.format(**values)
+        """Fill placeholders. Values are inserted verbatim, so a brace in a
+        ticket cannot be read as a placeholder and cannot crash a run.
+        """
+        rendered = self.user
+        tokens = {}
+        for index, (key, value) in enumerate(values.items()):
+            token = f"\x00{index}\x00"
+            rendered = rendered.replace("{" + key + "}", token)
+            tokens[token] = "" if value is None else str(value)
+        for token, value in tokens.items():
+            rendered = rendered.replace(token, value)
+        return rendered
 
 
 def _parse_front_matter(text: str) -> tuple[dict, str]:

@@ -84,3 +84,7 @@ happens means the declaration is accurate rather than reconstructed.
 | 8 Nov | Cursor / Claude | Repository scaffold and the discovery analysis script | |
 | 10 Nov | Cursor / Claude | Ingest, retrieval, config, test suites, tuning script | Chose cosine over default L2; added offline fallback for the encoder |
 | 10 Nov | Cursor / Claude | Model client, classifier, prompt PR-01, model comparison script | Rejected the suggested OpenRouter default after checking its 50/day free limit against our ~800-call run; picked gpt-oss-20b on measured accuracy rather than model size |
+| 10 Nov | Cursor / Claude | Routing and the SQLite decision log | Kept the confidence threshold at the brief's 0.80 until a full classification pass exists to calibrate it; the other branches follow the development labels |
+| 10 Nov | Cursor / Claude | Grounded generation (PR-02) and the blocking guardrails | Citations must be a verbatim span of a retrieved passage; a reply with an email, phone or key is blocked rather than warned |
+| 10 Nov | Cursor / Claude | Local console and the unattended harness | Satisfaction and hallucination stay blank in the report, because those need a human review and the run must not invent them |
+| 10 Nov | Cursor / Claude | CI workflow and the provider-outage run | Ran the outage test on uncached tickets so the response cache could not hide the failure |

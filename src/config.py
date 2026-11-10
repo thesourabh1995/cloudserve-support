@@ -84,8 +84,9 @@ class Settings:
     chunk_size: int = _int("CHUNK_SIZE", 800)
     chunk_overlap: int = _int("CHUNK_OVERLAP", 120)
 
-    # Routing. The pack's diagram shows 0.80 and says explicitly that the number
-    # is illustrative; the value used here is set from the calibration data.
+    # Routing. The pack's diagram shows 0.80 and says the number is illustrative.
+    # It stays at 0.80 until a full classification pass produces a confidence
+    # distribution to calibrate against. See docs/routing_rules.md.
     confidence_threshold: float = _float("CONFIDENCE_THRESHOLD", 0.80)
 
     # Persistence

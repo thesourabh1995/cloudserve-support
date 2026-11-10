@@ -136,9 +136,10 @@ def normalise_ticket(raw: dict) -> Ticket:
     )
 
 
-def load_tickets(path: str) -> list[Ticket]:
-    """Read a ticket file and normalise every record in it.
+def load_records(path: str) -> list:
+    """Read the ticket file as raw records, without normalising them.
 
+    The harness passes each record through the pipeline, which normalises it.
     Accepts either a bare list or an object wrapping one, because the hidden
     evaluation file is only promised to use the same schema, not the same
     top-level shape.
@@ -154,8 +155,12 @@ def load_tickets(path: str) -> list[Ticket]:
 
     if not isinstance(payload, list):
         raise ValueError(f"{path}: expected a list of tickets, found {type(payload).__name__}")
+    return payload
 
-    return [normalise_ticket(record) for record in payload]
+
+def load_tickets(path: str) -> list[Ticket]:
+    """Read a ticket file and normalise every record in it."""
+    return [normalise_ticket(record) for record in load_records(path)]
 
 
 def load_labels(path: str) -> dict[str, dict]:
