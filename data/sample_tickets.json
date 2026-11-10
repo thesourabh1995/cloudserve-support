@@ -1,0 +1,344 @@
+[
+  {
+    "ticket_id": "DEV-0277",
+    "channel": "chat",
+    "subject": "",
+    "body": "Our connection pool appears to be exhausting under moderate load. We have already increased the pool size and it made things worse.",
+    "received_at": "2026-05-25T02:19:00Z",
+    "customer_id": "CUST-1103",
+    "customer_name": "Bhavesh Brooks",
+    "customer_tier": "standard",
+    "customer_region": "latin_america",
+    "language_fluency": "fluent",
+    "labels": {
+      "intent": "database_issue",
+      "urgency": "high",
+      "expected_route": "escalate",
+      "answerable_from_docs": true,
+      "expected_doc_ids": [
+        "DOC-PERF-003"
+      ],
+      "must_not_auto_respond": false
+    },
+    "history": {
+      "first_contact_resolution": false,
+      "resolution_time_minutes": 1252,
+      "csat_rating": 1,
+      "escalated": true,
+      "repeat_contact": false
+    }
+  },
+  {
+    "ticket_id": "DEV-0125",
+    "channel": "chat",
+    "subject": "",
+    "body": "Signature verification fails for every delivery. We are computing the signature exactly as the documentation describes, over the parsed body.",
+    "received_at": "2026-04-30T14:43:00Z",
+    "customer_id": "CUST-1212",
+    "customer_name": "Ulrike Iyer",
+    "customer_tier": "enterprise",
+    "customer_region": "europe",
+    "language_fluency": "fluent",
+    "labels": {
+      "intent": "webhook_issue",
+      "urgency": "medium",
+      "expected_route": "auto_respond",
+      "answerable_from_docs": true,
+      "expected_doc_ids": [
+        "DOC-API-003"
+      ],
+      "must_not_auto_respond": false
+    },
+    "history": {
+      "first_contact_resolution": false,
+      "resolution_time_minutes": 726,
+      "csat_rating": 1,
+      "escalated": true,
+      "repeat_contact": false
+    }
+  },
+  {
+    "ticket_id": "DEV-0326",
+    "channel": "chat",
+    "subject": "",
+    "body": "Our export is missing records that were definitely created before I started the job. Is there something about how the snapshot works that I am misunderstanding?",
+    "received_at": "2026-05-05T06:53:00Z",
+    "customer_id": "CUST-1120",
+    "customer_name": "Victor Thompson",
+    "customer_tier": "business",
+    "customer_region": "asia_pacific",
+    "language_fluency": "fluent",
+    "labels": {
+      "intent": "data_export",
+      "urgency": "medium",
+      "expected_route": "auto_respond",
+      "answerable_from_docs": true,
+      "expected_doc_ids": [
+        "DOC-DATA-001"
+      ],
+      "must_not_auto_respond": false
+    },
+    "history": {
+      "first_contact_resolution": true,
+      "resolution_time_minutes": 5,
+      "csat_rating": 1,
+      "escalated": false,
+      "repeat_contact": false
+    }
+  },
+  {
+    "ticket_id": "DEV-0042",
+    "channel": "docs_comment",
+    "subject": "Need to roll back the latest release",
+    "body": "How do I revert to an earlier revision? The release we put out this morning is causing errors and I would rather roll back than try to fix forward.",
+    "received_at": "2026-03-12T13:49:00Z",
+    "customer_id": "CUST-1195",
+    "customer_name": "Rosa Patel",
+    "customer_tier": "standard",
+    "customer_region": "europe",
+    "language_fluency": "fluent",
+    "labels": {
+      "intent": "rollback_request",
+      "urgency": "medium",
+      "expected_route": "escalate",
+      "answerable_from_docs": false,
+      "expected_doc_ids": [],
+      "must_not_auto_respond": false
+    },
+    "history": {
+      "first_contact_resolution": false,
+      "resolution_time_minutes": 1089,
+      "csat_rating": 4,
+      "escalated": true,
+      "repeat_contact": true
+    }
+  },
+  {
+    "ticket_id": "DEV-0057",
+    "channel": "docs_comment",
+    "subject": "Connecting our CI pipeline",
+    "body": "we are connecting our CI pipeline and not are sure whether to use personal key or something else. What the recommended approach for automation? please do the needful.",
+    "received_at": "2026-05-04T13:18:00Z",
+    "customer_id": "CUST-1016",
+    "customer_name": "Bhavesh Rossi",
+    "customer_tier": "business",
+    "customer_region": "north_america",
+    "language_fluency": "non_fluent",
+    "labels": {
+      "intent": "integration_help",
+      "urgency": "medium",
+      "expected_route": "escalate",
+      "answerable_from_docs": false,
+      "expected_doc_ids": [],
+      "must_not_auto_respond": false
+    },
+    "history": {
+      "first_contact_resolution": false,
+      "resolution_time_minutes": 168,
+      "csat_rating": 3,
+      "escalated": true,
+      "repeat_contact": true
+    }
+  },
+  {
+    "ticket_id": "DEV-0442",
+    "channel": "docs_comment",
+    "subject": "Build fails in the pipeline",
+    "body": "Our deployment reaches running and then rolls back after about a minute. The logs mention a health check timeout. It runs perfectly on my machine and in staging.",
+    "received_at": "2026-03-24T11:08:00Z",
+    "customer_id": "CUST-1048",
+    "customer_name": "Sanjay Larsen",
+    "customer_tier": "standard",
+    "customer_region": "asia_pacific",
+    "language_fluency": "fluent",
+    "labels": {
+      "intent": "deployment_failure",
+      "urgency": "medium",
+      "expected_route": "escalate",
+      "answerable_from_docs": false,
+      "expected_doc_ids": [],
+      "must_not_auto_respond": false
+    },
+    "history": {
+      "first_contact_resolution": false,
+      "resolution_time_minutes": 799,
+      "csat_rating": 4,
+      "escalated": true,
+      "repeat_contact": true
+    }
+  },
+  {
+    "ticket_id": "DEV-0056",
+    "channel": "email",
+    "subject": "Response times have doubled",
+    "body": "Latency has been climbing gradually over the past a couple of days. Nothing in our code has changed. Memory usage looks high but not at the limit.",
+    "received_at": "2026-03-15T16:55:00Z",
+    "customer_id": "CUST-1008",
+    "customer_name": "Priya Karimova",
+    "customer_tier": "business",
+    "customer_region": "europe",
+    "language_fluency": "fluent",
+    "labels": {
+      "intent": "performance_degradation",
+      "urgency": "medium",
+      "expected_route": "auto_respond",
+      "answerable_from_docs": true,
+      "expected_doc_ids": [
+        "DOC-PERF-001"
+      ],
+      "must_not_auto_respond": false
+    },
+    "history": {
+      "first_contact_resolution": true,
+      "resolution_time_minutes": 22,
+      "csat_rating": 4,
+      "escalated": false,
+      "repeat_contact": false
+    }
+  },
+  {
+    "ticket_id": "DEV-0225",
+    "channel": "email",
+    "subject": "Service slow at peak hours",
+    "body": "Our response times have roughly doubled since last Friday with no deployment on our side. The median looks acceptable but the 95th percentile is far worse than it was.",
+    "received_at": "2026-04-23T08:40:00Z",
+    "customer_id": "CUST-1253",
+    "customer_name": "Rosa Nair",
+    "customer_tier": "business",
+    "customer_region": "north_america",
+    "language_fluency": "fluent",
+    "labels": {
+      "intent": "performance_degradation",
+      "urgency": "high",
+      "expected_route": "escalate",
+      "answerable_from_docs": true,
+      "expected_doc_ids": [
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "must_not_auto_respond": false
+    },
+    "history": {
+      "first_contact_resolution": false,
+      "resolution_time_minutes": 482,
+      "csat_rating": 2,
+      "escalated": true,
+      "repeat_contact": false
+    }
+  },
+  {
+    "ticket_id": "DEV-0370",
+    "channel": "email",
+    "subject": "Possible account compromise",
+    "body": "A former employee appears to still have access three weeks after leaving. We have found API calls made under their account. This is urgent.",
+    "received_at": "2026-04-17T11:09:00Z",
+    "customer_id": "CUST-1035",
+    "customer_name": "Hiroshi Costa",
+    "customer_tier": "standard",
+    "customer_region": "latin_america",
+    "language_fluency": "fluent",
+    "labels": {
+      "intent": "security_incident",
+      "urgency": "high",
+      "expected_route": "escalate",
+      "answerable_from_docs": true,
+      "expected_doc_ids": [
+        "DOC-SEC-001"
+      ],
+      "must_not_auto_respond": true
+    },
+    "history": {
+      "first_contact_resolution": false,
+      "resolution_time_minutes": 355,
+      "csat_rating": 2,
+      "escalated": true,
+      "repeat_contact": true
+    }
+  },
+  {
+    "ticket_id": "DEV-0053",
+    "channel": "forum",
+    "subject": "How do I revert to the previous revision",
+    "body": "We shipped a release two days ago that has broken checkout for a portion of our customers. We need to get back to the previous version quickly. What is the fastest safe route?",
+    "received_at": "2026-03-30T11:21:00Z",
+    "customer_id": "CUST-1218",
+    "customer_name": "Xin Zhang",
+    "customer_tier": "enterprise",
+    "customer_region": "north_america",
+    "language_fluency": "fluent",
+    "labels": {
+      "intent": "rollback_request",
+      "urgency": "high",
+      "expected_route": "auto_respond",
+      "answerable_from_docs": true,
+      "expected_doc_ids": [
+        "DOC-DEPLOY-002"
+      ],
+      "must_not_auto_respond": false
+    },
+    "history": {
+      "first_contact_resolution": true,
+      "resolution_time_minutes": 36,
+      "csat_rating": 5,
+      "escalated": false,
+      "repeat_contact": false
+    }
+  },
+  {
+    "ticket_id": "DEV-0239",
+    "channel": "forum",
+    "subject": "Spend cap stopped our service",
+    "body": "We were throttled yesterday morning after a traffic increase and it took down part of our product. We would rather pay overage than be stopped. How do we change that?",
+    "received_at": "2026-03-24T07:45:00Z",
+    "customer_id": "CUST-1232",
+    "customer_name": "Grace Okafor",
+    "customer_tier": "standard",
+    "customer_region": "north_america",
+    "language_fluency": "fluent",
+    "labels": {
+      "intent": "quota_or_overage",
+      "urgency": "medium",
+      "expected_route": "escalate",
+      "answerable_from_docs": false,
+      "expected_doc_ids": [],
+      "must_not_auto_respond": false
+    },
+    "history": {
+      "first_contact_resolution": false,
+      "resolution_time_minutes": 871,
+      "csat_rating": 4,
+      "escalated": true,
+      "repeat_contact": false
+    }
+  },
+  {
+    "ticket_id": "DEV-0137",
+    "channel": "forum",
+    "subject": "Database restore taking hours",
+    "body": "We are getting errors saying no connection is available. This started when we scaled up our service. The database itself shows very few active queries.",
+    "received_at": "2026-04-23T05:32:00Z",
+    "customer_id": "CUST-1141",
+    "customer_name": "Lucas Tanaka",
+    "customer_tier": "enterprise",
+    "customer_region": "asia_pacific",
+    "language_fluency": "fluent",
+    "labels": {
+      "intent": "database_issue",
+      "urgency": "high",
+      "expected_route": "escalate",
+      "answerable_from_docs": true,
+      "expected_doc_ids": [
+        "DOC-PERF-003",
+        "DOC-DATA-002"
+      ],
+      "must_not_auto_respond": false
+    },
+    "history": {
+      "first_contact_resolution": false,
+      "resolution_time_minutes": 555,
+      "csat_rating": 2,
+      "escalated": true,
+      "repeat_contact": false
+    }
+  }
+]

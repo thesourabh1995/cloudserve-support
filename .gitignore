@@ -1,0 +1,18 @@
+.env
+.venv/
+storage/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+
+# Course-supplied datasets are not committed: the submission guide asks for
+# small samples only. data/sample_tickets.json is committed for the smoke test.
+data/development_tickets.json
+data/validation_tickets.json
+data/ground_truth_responses.json
+data/documentation.json
+
+evaluation/results/*.json
+evaluation/results/*.md
+!evaluation/results/.gitkeep
