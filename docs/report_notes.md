@@ -83,3 +83,4 @@ happens means the declaration is accurate rather than reconstructed.
 |---|---|---|---|
 | 8 Nov | Cursor / Claude | Repository scaffold and the discovery analysis script | |
 | 10 Nov | Cursor / Claude | Ingest, retrieval, config, test suites, tuning script | Chose cosine over default L2; added offline fallback for the encoder |
+| 10 Nov | Cursor / Claude | Model client, classifier, prompt PR-01, model comparison script | Rejected the suggested OpenRouter default after checking its 50/day free limit against our ~800-call run; picked gpt-oss-20b on measured accuracy rather than model size |

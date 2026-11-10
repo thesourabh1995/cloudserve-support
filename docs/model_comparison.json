@@ -1,0 +1,32 @@
+[
+  {
+    "model": "openai/gpt-oss-20b",
+    "accuracy": 0.9444444444444444,
+    "malformed": 0,
+    "tokens_total": 15533,
+    "tokens_per_ticket": 862.9444444444445,
+    "seconds": 125.04842129186727,
+    "full_run_tokens": 431472.22222222225,
+    "full_run_minutes": 53.93402777777778
+  },
+  {
+    "model": "qwen/qwen3.8-27b",
+    "accuracy": 0.8888888888888888,
+    "malformed": 0,
+    "tokens_total": 11811,
+    "tokens_per_ticket": 656.1666666666666,
+    "seconds": 65.26263595791534,
+    "full_run_tokens": 328083.3333333333,
+    "full_run_minutes": 41.010416666666664
+  },
+  {
+    "model": "openai/gpt-oss-120b",
+    "accuracy": 0.8888888888888888,
+    "malformed": 0,
+    "tokens_total": 14386,
+    "tokens_per_ticket": 799.2222222222222,
+    "seconds": 123.2620023752097,
+    "full_run_tokens": 399611.11111111107,
+    "full_run_minutes": 49.951388888888886
+  }
+]

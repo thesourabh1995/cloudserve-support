@@ -33,15 +33,19 @@ def _int(name: str, default: int) -> int:
 
 # Both providers named in the project brief speak the OpenAI chat-completions
 # format, so the difference between them is a base URL, a key and a model name.
-# Groq is the default because its free allowance is 14,400 requests a day
-# against OpenRouter's 50, and a full run over the 500-ticket set needs roughly
-# a thousand calls. The choice is recorded here rather than in the code so the
-# evaluation can be re-run against either and the comparison defended.
+# Groq is the default because its free tier allows 1,000 requests a day against
+# OpenRouter's 50, and a full pass over the 500-ticket set needs roughly 800
+# calls. The choice is recorded here rather than inline so the evaluation can be
+# re-run against either provider and the comparison defended.
+#
+# The default model is the measured winner in analysis/compare_models.py, not
+# the obvious pick: see docs/model_choice.md. Note that Groq's catalogue no
+# longer carries the Llama models most write-ups assume.
 PROVIDERS = {
     "groq": {
         "base_url": "https://api.groq.com/openai/v1",
         "key_var": "GROQ_API_KEY",
-        "model": "llama-3.1-8b-instant",
+        "model": "openai/gpt-oss-20b",
     },
     "openrouter": {
         "base_url": "https://openrouter.ai/api/v1",
