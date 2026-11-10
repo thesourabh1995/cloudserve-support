@@ -6,7 +6,7 @@ stakeholder interviews against the data.
 
 Standard library only, so it runs before the project dependencies are installed.
 
-    python analysis/discovery_analysis.py --tickets data/development_tickets.json \
+    python -m analysis.discovery_analysis --tickets data/development_tickets.json \
                                           --docs data/documentation.json \
                                           --output docs/discovery_findings.md
 """
