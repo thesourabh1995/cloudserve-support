@@ -31,12 +31,38 @@ def _int(name: str, default: int) -> int:
         return default
 
 
+# Both providers named in the project brief speak the OpenAI chat-completions
+# format, so the difference between them is a base URL, a key and a model name.
+# Groq is the default because its free allowance is 14,400 requests a day
+# against OpenRouter's 50, and a full run over the 500-ticket set needs roughly
+# a thousand calls. The choice is recorded here rather than in the code so the
+# evaluation can be re-run against either and the comparison defended.
+PROVIDERS = {
+    "groq": {
+        "base_url": "https://api.groq.com/openai/v1",
+        "key_var": "GROQ_API_KEY",
+        "model": "llama-3.1-8b-instant",
+    },
+    "openrouter": {
+        "base_url": "https://openrouter.ai/api/v1",
+        "key_var": "OPENROUTER_API_KEY",
+        "model": "meta-llama/llama-3.1-8b-instruct:free",
+    },
+}
+
+
+def _provider() -> str:
+    name = os.getenv("LLM_PROVIDER", "groq").strip().lower()
+    return name if name in PROVIDERS else "groq"
+
+
 @dataclass(frozen=True)
 class Settings:
     # Model access
-    api_key: str = os.getenv("OPENROUTER_API_KEY", "")
-    api_base: str = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
-    model_name: str = os.getenv("MODEL_NAME", "meta-llama/llama-3.1-8b-instruct")
+    provider: str = _provider()
+    api_key: str = os.getenv(PROVIDERS[_provider()]["key_var"], "")
+    api_base: str = os.getenv("LLM_BASE_URL", PROVIDERS[_provider()]["base_url"])
+    model_name: str = os.getenv("MODEL_NAME", PROVIDERS[_provider()]["model"])
 
     # Retrieval
     embedding_model: str = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
@@ -74,8 +100,11 @@ class Settings:
     def require_api_key(self) -> str:
         """Fail loudly, and only at the point of use."""
         if not self.api_key:
+            key_var = PROVIDERS[self.provider]["key_var"]
             raise RuntimeError(
-                "OPENROUTER_API_KEY is not set. Copy .env.example to .env and add your key."
+                f"{key_var} is not set. Copy .env.example to .env and add your "
+                f"{self.provider} key, or set LLM_PROVIDER to another supported "
+                f"provider ({', '.join(sorted(PROVIDERS))})."
             )
         return self.api_key
 
