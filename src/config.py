@@ -104,6 +104,10 @@ class Settings:
     # distribution to calibrate against. See docs/routing_rules.md.
     confidence_threshold: float = _float("CONFIDENCE_THRESHOLD", 0.80)
 
+    # The stop control. Creating this file halts automatic answering from the
+    # next ticket onward, with no restart and no deployment. See src/killswitch.py.
+    kill_switch_file: str = os.getenv("KILL_SWITCH_FILE", "./storage/STOP_AUTOMATION")
+
     # Persistence
     database_url: str = os.getenv("DATABASE_URL", "sqlite:///./storage/decisions.db")
     log_level: str = os.getenv("LOG_LEVEL", "INFO")

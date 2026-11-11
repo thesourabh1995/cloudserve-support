@@ -23,6 +23,7 @@ from dataclasses import dataclass
 
 from src.classify import Classification, NEVER_AUTO_RESPOND
 from src.config import settings
+from src.killswitch import Halt
 from src.models import Ticket
 
 AUTO_RESPOND = "auto_respond"
@@ -75,15 +76,33 @@ def route(
     classification: Classification,
     passages: list,
     threshold: float = None,
+    halt: Halt = None,
 ) -> RoutingDecision:
     """Decide once. Pure: no clock, no randomness, no model call.
 
     `passages` is whatever retrieval returned after the relevance floor, so an
     empty list means nothing relevant was found rather than that retrieval was
     skipped.
+
+    `halt` is the state of the stop control, read by the caller rather than
+    here. Reading a file inside this function would make the same inputs
+    produce different decisions at different moments, which is exactly what A5
+    forbids, so the IO stays at the edge and the decision stays a function of
+    its arguments.
     """
     threshold = settings.confidence_threshold if threshold is None else threshold
     confidence = classification.confidence
+
+    # First, ahead of everything. When someone has stopped automation they have
+    # stopped it, and no later rule may decide a ticket is safe enough to answer.
+    if halt is not None and halt.engaged:
+        return _escalate(
+            "automation_halted",
+            "Automatic answering is stopped by the kill switch "
+            f"({halt.note}). The ticket is classified and queued for a person.",
+            confidence,
+            threshold,
+        )
 
     if ticket.is_empty:
         return _escalate(

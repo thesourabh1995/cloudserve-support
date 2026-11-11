@@ -8,6 +8,7 @@ the categories that must never be answered automatically.
 from src.classify import Classification
 from src.models import Ticket
 from src.retrieve import Passage
+from src.killswitch import Halt
 from src.route import AUTO_RESPOND, ESCALATE, route
 
 
@@ -146,3 +147,22 @@ class TestThresholdIsTheOneGiven:
         assert low_bar.action == AUTO_RESPOND
         assert high_bar.action == ESCALATE
         assert high_bar.threshold == 0.90
+
+
+class TestTheKillSwitchOutranksEverything:
+    """The stop control is the first rule, so no later rule can overrule it."""
+
+    def test_a_ticket_that_would_be_answered_is_escalated_when_halted(self):
+        answerable = dict(
+            ticket=ticket(), classification=classification(), passages=[passage()]
+        )
+        assert route(**answerable, halt=Halt(engaged=False)).action == AUTO_RESPOND
+
+        halted = route(**answerable, halt=Halt(engaged=True, note="bad answers"))
+        assert halted.action == ESCALATE
+        assert halted.rule == "automation_halted"
+        # Whoever stopped it said why, and that reaches the decision log.
+        assert "bad answers" in halted.reason
+
+    def test_no_halt_argument_behaves_as_running(self):
+        assert route(ticket(), classification(), [passage()]).action == AUTO_RESPOND

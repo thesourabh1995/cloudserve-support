@@ -8,6 +8,7 @@ text, the model and the retrieved passages only.
 import uuid
 from dataclasses import asdict, dataclass
 
+from src import killswitch
 from src.classify import Classifier
 from src.config import settings
 from src.generate import ABSTAIN, Draft, Generator
@@ -27,7 +28,17 @@ from src.route import AUTO_RESPOND, route
 # that must never be answered automatically, a ticket we could not classify,
 # and a ticket with no text. The retrieved sources are still attached, since
 # those cost nothing further.
-NO_DRAFT_RULES = frozenset({"protected_category", "classification_unusable", "empty_ticket"})
+NO_DRAFT_RULES = frozenset(
+    {
+        "protected_category",
+        "classification_unusable",
+        "empty_ticket",
+        # The usual reason to stop automation is that the answers are wrong.
+        # Drafting more of them spends tokens on text nobody should trust, and
+        # puts a bad suggestion in front of the person handling the incident.
+        "automation_halted",
+    }
+)
 
 
 def skip_draft(rule: str) -> Draft:
@@ -182,7 +193,9 @@ class Pipeline:
         ticket = normalise_ticket(raw)
         classification = self._classifier().classify(ticket)
         passages = [] if ticket.is_empty else self._retriever().search(ticket.text)
-        decision = route(ticket, classification, passages)
+        # Read once per ticket, so engaging the switch takes effect on the next
+        # ticket rather than the next restart.
+        decision = route(ticket, classification, passages, halt=killswitch.status())
 
         if decision.rule in NO_DRAFT_RULES:
             draft = skip_draft(decision.rule)
