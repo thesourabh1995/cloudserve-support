@@ -104,6 +104,10 @@ class Settings:
     # distribution to calibrate against. See docs/routing_rules.md.
     confidence_threshold: float = _float("CONFIDENCE_THRESHOLD", 0.80)
 
+    # The knowledge base the answers are grounded in. Committed, because the
+    # application cannot function without it and 29 articles is sample-sized.
+    documentation_path: str = os.getenv("DOCUMENTATION_PATH", "./data/documentation.json")
+
     # The stop control. Creating this file halts automatic answering from the
     # next ticket onward, with no restart and no deployment. See src/killswitch.py.
     kill_switch_file: str = os.getenv("KILL_SWITCH_FILE", "./storage/STOP_AUTOMATION")

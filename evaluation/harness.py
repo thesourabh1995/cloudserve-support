@@ -24,6 +24,7 @@ from src.guardrails import citation_tally, review
 from src.ingest import load_labels, load_records, normalise_ticket
 from src.logging_store import DecisionLog
 from src.pipeline import Pipeline
+from src.retrieve import ensure_index
 from src.route import route
 
 from evaluation.metrics import render_markdown, summarise
@@ -100,6 +101,11 @@ def run(input_path: str, output_dir: str, pipeline: Pipeline = None) -> dict:
     labels = load_labels(input_path)
 
     if pipeline is None:
+        # Before anything is processed, so a missing corpus fails here with an
+        # instruction rather than silently escalating every ticket for want of
+        # a passage and reporting a completed run. Tests inject a pipeline and
+        # skip this, because they stub retrieval entirely.
+        ensure_index()
         run_id = "harness-" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         pipeline = Pipeline(
             decision_log=DecisionLog(os.path.join(output_dir, "decisions.db")),

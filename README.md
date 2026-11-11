@@ -11,7 +11,9 @@ python3 -m venv .venv
 
 Every command below uses `.venv/bin/python` rather than `python`. This is intentional: on some systems there is no `python` on the path at all, and a system `python3` may be older than the 3.10 floor this project needs. Running the interpreter from the virtual environment by its full path avoids both and works the same everywhere.
 
-Open http://127.0.0.1:8000. If that port is already taken, start with `PORT=8010 .venv/bin/python -m src.api` and open http://127.0.0.1:8010. The knowledge base index is built with `.venv/bin/python -m src.retrieve` if `storage/chroma` is empty.
+Open http://127.0.0.1:8000. If that port is already taken, start with `PORT=8010 .venv/bin/python -m src.api` and open http://127.0.0.1:8010.
+
+The knowledge base is `data/documentation.json`, which is in the repository. It is indexed into a local vector store automatically the first time anything searches it, so there is no separate setup step. To rebuild it deliberately, run `.venv/bin/python -m src.retrieve`. The first run on a new machine downloads the embedding model, so it needs network access and takes a minute or two.
 
 The unattended run over a whole file, which is the gate for the project:
 

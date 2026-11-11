@@ -213,12 +213,45 @@ class Retriever:
         return passages
 
 
-def build_index(docs_path: str = "data/documentation.json") -> int:
-    """Entry point used by the README setup step and by the harness."""
+class CorpusMissing(RuntimeError):
+    """The knowledge base file is not where it should be.
+
+    Raised rather than handled, because there is no safe degraded behaviour: a
+    system with no documentation cannot ground an answer, and carrying on would
+    escalate every ticket for want of a passage while reporting a completed run.
+    """
+
+
+def build_index(docs_path: str = None) -> int:
+    """Entry point used by the README setup step and by `ensure_index`."""
+    docs_path = docs_path or settings.documentation_path
+    if not os.path.exists(docs_path):
+        raise CorpusMissing(
+            f"Knowledge base not found at {docs_path}. Copy documentation.json "
+            "from the course pack's 05_Datasets folder into data/, or set "
+            "DOCUMENTATION_PATH to wherever you keep it."
+        )
     retriever = Retriever()
     count = retriever.index(load_documents(docs_path))
     print(f"indexed {count} passages from {docs_path} into {retriever.chroma_path}")
     return count
+
+
+def ensure_index(docs_path: str = None) -> int:
+    """Build the index if it is empty, and say so. Returns passages indexed.
+
+    Called at the start of a run so that the single documented command is
+    enough on a machine that has never run this before. Without it a fresh
+    checkout retrieves nothing, every ticket escalates for want of a passage,
+    and the run still reports success -- which is a worse failure than
+    crashing, because nothing in the output says the corpus was missing.
+    """
+    retriever = Retriever()
+    existing = retriever.collection.count()
+    if existing:
+        return existing
+    print("knowledge base index is empty; building it now", flush=True)
+    return build_index(docs_path)
 
 
 if __name__ == "__main__":
