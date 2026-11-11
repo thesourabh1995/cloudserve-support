@@ -155,6 +155,31 @@ decides the gate. Rewritten to explain why the full interpreter path is used. Th
 exactly the class of defect the clean-checkout rehearsal exists to catch, which is an
 argument for doing that rehearsal sooner rather than on the final afternoon.
 
+**Did — the clean-checkout rehearsal, and it was worth every minute.** Cloned from the
+remote into an empty directory and followed the README literally. Two defects, both
+affecting the gate, neither visible from reading the repository. Written up in
+`docs/clean_checkout_rehearsal.md`.
+
+The first is the one that would have cost the most. `data/documentation.json` had been
+gitignored along with the course ticket sets, but it is not test data — it is the corpus
+every answer is grounded in. And the failure was silent: Chroma returns an empty collection
+rather than complaining, so a fresh clone would have processed all 120 hidden tickets,
+escalated every one for want of a supporting passage, and reported a completed run. A
+failure that looks like success is the worst thing to ship to someone else's machine. Now
+committed, and the index builds itself on first search so the one documented command
+suffices.
+
+The second was my own error from earlier the same day. I had rewritten the README to say
+`python3 -m venv .venv` and then asserted `.venv/bin/python` was 3.11. A virtual
+environment runs whichever interpreter created it, so on this machine that instruction
+produces 3.9.6, below the floor. Fixed, and `config.py` now raises on import below 3.10
+with the instruction in the message.
+
+**Worth recording as a lesson.** Both defects were in the gap between what the repository
+contains and what the README claims about it, which is exactly the gap reading cannot
+close. The plan scheduled this rehearsal for the final afternoon; doing it four days early
+is the single best decision of the day.
+
 **Still to decide.** The problem statement, still. Whether to report the latency target
 as missed or as a declared tradeoff. Whether the single `no_supporting_passage`
 escalation is worth relaxing to bring escalation from 31.2% to under 30%.
