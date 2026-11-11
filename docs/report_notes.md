@@ -186,6 +186,42 @@ escalation is worth relaxing to bring escalation from 31.2% to under 30%.
 
 ---
 
+## Wed 11 Nov — Day 3, later: the report
+
+**Built.** `docs/report.md`, the four figures in `docs/figures/`, and `docs/architecture.md`.
+The report is assembled from this file and the stage documents rather than written from
+memory, which is what this file exists for. 27 pages of body against a 20–30 limit, built
+to PDF with a script kept outside the repository so `requirements.txt` stays exactly what
+the gate installs.
+
+**Found — the run arithmetic did not close, and the gap was a real behaviour.** Writing the
+routing figure meant tallying rules from the decision log, and the totals disagreed with
+the metrics report: 59 tickets routed to `auto_respond` and 2 blocked by a guardrail, which
+should leave 57 answered, against 55 in the report. The two missing tickets are VAL-0026 and
+VAL-0079, where routing said answer, generation ran, and the *model itself* declined —
+returning "the documentation does not cover the request" with no citations. The pipeline
+converts a draft with no citable content into an escalation, which is correct, but it means
+there are three abstention paths rather than two, and the third was never designed. Recorded
+in the report as discovered in the results rather than specified in advance.
+
+**Decided — `decisions.db` stays out of the repository.** The submission guide asks
+`evaluation/` to hold the results and not only the harness, so the two runs the report
+quotes are now committed. But the decision log stores each ticket's subject and body, and
+this repository is public, so committing it would republish the course's validation set in
+another form. `outcomes.jsonl` carries the per-ticket decisions with no ticket text and is
+committed instead. The reason is written into `.gitignore` so it reads as a decision.
+
+**Fixed.** Three figures had label collisions and one was written with a Latin-1 middot that
+made the SVG invalid, so it silently failed to render. Caught by validating every figure
+and screenshotting the result rather than assuming; the build script now refuses to produce
+a PDF if any figure is not paired with its caption, because the first build separated
+Figure 3 from its caption across a page break and nothing complained.
+
+**Still to decide.** Nothing in the report. Outstanding for submission: the effort log, the
+hallucination scoring, the video, and the enrolment name the deliverable filenames need.
+
+---
+
 ## AI tool use — log as you go
 
 Required by Project Instructions §09 and the final checklist. Keeping it here as it
@@ -207,3 +243,5 @@ happens means the declaration is accurate rather than reconstructed.
 | 11 Nov | Cursor / Claude | Fairness audit script and the kill switch | Rejected putting the switch behind an environment variable or a config flag, since both need a restart; kept the file read out of `route()` to preserve A5 determinism |
 | 11 Nov | Cursor / Claude | Governance document: register, incident response, declaration | Listed the three framework guardrails that are *not* built rather than implying all five are; added R-09 for the confidence miscalibration the run exposed |
 | 11 Nov | Cursor / Claude | Validation run and the analysis of its results | Declined to tune the confidence threshold or relax the protected-category rules to hit the escalation target; decomposed the tier gap rather than reporting the raw 30-point spread alone |
+| 11 Nov | Cursor / Claude | **Drafted the full report**, the four figures, and `docs/architecture.md` | Substantial AI contribution to the largest written deliverable, declared as drafted rather than independently written. Assembled from this notes file and the stage documents, not from memory. Required the routing counts to be tallied from the decision log rather than quoted from the existing write-ups, which is what surfaced the two generator abstentions |
+| 11 Nov | Cursor / Claude | Decision on which run artefacts to commit | Rejected committing `decisions.db`: it carries every ticket's subject and body, and the repository is public |

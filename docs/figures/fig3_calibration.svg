@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 430" width="780" height="430" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .bar  { fill:#dcdcdc; stroke:#444; stroke-width:1.1; }
+    .axis { stroke:#333; stroke-width:1.2; }
+    .grid { stroke:#e6e6e6; stroke-width:1; }
+    .thr  { stroke:#111; stroke-width:1.2; stroke-dasharray:6 4; }
+    .cal  { stroke:#111; stroke-width:1.7; fill:none; }
+    .dot  { fill:#ffffff; stroke:#111; stroke-width:1.7; }
+    .t    { font-size:12px; fill:#111; }
+    .s    { font-size:10px; fill:#555; }
+    .val  { font-size:11.5px; fill:#111; font-weight:bold; }
+    .leg  { font-size:11px; fill:#333; }
+  </style>
+
+  <line class="grid" x1="90" y1="70"  x2="740" y2="70"/>
+  <line class="grid" x1="90" y1="135" x2="740" y2="135"/>
+  <line class="grid" x1="90" y1="200" x2="740" y2="200"/>
+  <line class="grid" x1="90" y1="265" x2="740" y2="265"/>
+  <line class="axis" x1="90" y1="330" x2="740" y2="330"/>
+  <line class="axis" x1="90" y1="55"  x2="90"  y2="330"/>
+
+  <text class="s" x="82" y="74"  text-anchor="end">100%</text>
+  <text class="s" x="82" y="139" text-anchor="end">75%</text>
+  <text class="s" x="82" y="204" text-anchor="end">50%</text>
+  <text class="s" x="82" y="269" text-anchor="end">25%</text>
+  <text class="s" x="82" y="334" text-anchor="end">0%</text>
+
+  <rect class="bar" x="116" y="156" width="56" height="174"/>
+  <rect class="bar" x="224" y="70"  width="56" height="260"/>
+  <rect class="bar" x="332" y="70"  width="56" height="260"/>
+  <rect class="bar" x="440" y="104" width="56" height="226"/>
+  <rect class="bar" x="548" y="96"  width="56" height="234"/>
+  <rect class="bar" x="656" y="70"  width="56" height="260"/>
+
+  <text class="val" x="144" y="318" text-anchor="middle">67%</text>
+  <text class="val" x="252" y="318" text-anchor="middle">100%</text>
+  <text class="val" x="360" y="318" text-anchor="middle">100%</text>
+  <text class="val" x="468" y="318" text-anchor="middle">87%</text>
+  <text class="val" x="576" y="318" text-anchor="middle">90%</text>
+  <text class="val" x="684" y="318" text-anchor="middle">100%</text>
+
+  <polyline class="cal" points="144,148 252,122 360,109 468,96 576,91 684,83"/>
+  <circle class="dot" cx="144" cy="148" r="4"/>
+  <circle class="dot" cx="252" cy="122" r="4"/>
+  <circle class="dot" cx="360" cy="109" r="4"/>
+  <circle class="dot" cx="468" cy="96"  r="4"/>
+  <circle class="dot" cx="576" cy="91"  r="4"/>
+  <circle class="dot" cx="684" cy="83"  r="4"/>
+
+  <line class="thr" x1="198" y1="55" x2="198" y2="348"/>
+  <text class="s" x="194" y="362" text-anchor="end">routing threshold 0.80</text>
+
+  <text class="t" x="144" y="348" text-anchor="middle">0.70</text>
+  <text class="t" x="252" y="348" text-anchor="middle">0.80</text>
+  <text class="t" x="360" y="348" text-anchor="middle">0.85</text>
+  <text class="t" x="468" y="348" text-anchor="middle">0.90</text>
+  <text class="t" x="576" y="348" text-anchor="middle">0.92</text>
+  <text class="t" x="684" y="348" text-anchor="middle">0.95</text>
+
+  <text class="s" x="144" y="376" text-anchor="middle">n=3</text>
+  <text class="s" x="252" y="376" text-anchor="middle">n=8</text>
+  <text class="s" x="360" y="376" text-anchor="middle">n=1</text>
+  <text class="s" x="468" y="376" text-anchor="middle">n=39</text>
+  <text class="s" x="576" y="376" text-anchor="middle">n=10</text>
+  <text class="s" x="684" y="376" text-anchor="middle">n=19</text>
+
+  <text class="t" x="415" y="397" text-anchor="middle">Confidence the model reported</text>
+
+  <rect class="bar" x="150" y="412" width="24" height="11"/>
+  <text class="leg" x="182" y="422">observed classification accuracy</text>
+  <polyline class="cal" points="400,417 444,417"/>
+  <circle class="dot" cx="422" cy="417" r="4"/>
+  <text class="leg" x="454" y="422">where a calibrated score would sit</text>
+</svg>

@@ -1,0 +1,147 @@
+{
+  "volume": {
+    "tickets_processed": 6,
+    "answered_automatically": 0,
+    "escalated": 6,
+    "blocked_by_guardrails": 0
+  },
+  "business": {
+    "first_contact_resolution": 0.0,
+    "escalation_rate": 1.0,
+    "reply_time_seconds": {
+      "mean": null,
+      "median": null,
+      "p95": null,
+      "n": 0
+    }
+  },
+  "technical": {
+    "latency_seconds": {
+      "mean": 0.6333139858519038,
+      "median": 0.2223847914719954,
+      "p95": 2.480675583006814,
+      "n": 6
+    },
+    "citation_accuracy": null,
+    "citations_offered": 0,
+    "citations_resolved": 0,
+    "classification": {
+      "accuracy": 0.0,
+      "per_class": {
+        "configuration_help": {
+          "precision": null,
+          "recall": 0.0,
+          "support": 1
+        },
+        "data_export": {
+          "precision": null,
+          "recall": 0.0,
+          "support": 1
+        },
+        "feature_request": {
+          "precision": null,
+          "recall": 0.0,
+          "support": 1
+        },
+        "onboarding": {
+          "precision": null,
+          "recall": 0.0,
+          "support": 1
+        },
+        "sso_configuration": {
+          "precision": null,
+          "recall": 0.0,
+          "support": 1
+        },
+        "unclear_request": {
+          "precision": 0.0,
+          "recall": null,
+          "support": 0
+        },
+        "webhook_issue": {
+          "precision": null,
+          "recall": 0.0,
+          "support": 1
+        }
+      },
+      "evaluated": 6
+    },
+    "retrieval_hit_rate": {
+      "hit_rate": 1.0,
+      "eligible": 3,
+      "hits": 3
+    }
+  },
+  "governance": {
+    "decisions_logged": 6,
+    "log_complete": true,
+    "guardrail_activations": {},
+    "private_data_in_outbound_replies": 0,
+    "confidence_calibration": [
+      {
+        "from": 0.0,
+        "to": 0.2,
+        "n": 6,
+        "stated_confidence": 0.0,
+        "observed_accuracy": 0.0,
+        "gap": 0.0
+      }
+    ],
+    "quality_by_group": {
+      "customer_tier": {
+        "groups": {
+          "business": {
+            "n": 2,
+            "first_contact_resolution": 0.0
+          },
+          "standard": {
+            "n": 4,
+            "first_contact_resolution": 0.0
+          }
+        },
+        "spread": 0.0
+      },
+      "customer_region": {
+        "groups": {
+          "asia_pacific": {
+            "n": 1,
+            "first_contact_resolution": 0.0
+          },
+          "europe": {
+            "n": 2,
+            "first_contact_resolution": 0.0
+          },
+          "latin_america": {
+            "n": 1,
+            "first_contact_resolution": 0.0
+          },
+          "north_america": {
+            "n": 2,
+            "first_contact_resolution": 0.0
+          }
+        },
+        "spread": 0.0
+      },
+      "language_fluency": {
+        "groups": {
+          "fluent": {
+            "n": 5,
+            "first_contact_resolution": 0.0
+          },
+          "non_fluent": {
+            "n": 1,
+            "first_contact_resolution": 0.0
+          }
+        },
+        "spread": 0.0
+      }
+    }
+  },
+  "run": {
+    "input": "/Users/jarvis/Downloads/FDE_Capstone_Complete/cloudserve-support/storage/outage_six.json",
+    "tickets": 6,
+    "run_id": "harness-20261110T171232Z",
+    "seconds": 3.8,
+    "log_reconciles": true
+  }
+}

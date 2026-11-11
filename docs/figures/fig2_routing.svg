@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 470" width="880" height="470" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+    </marker>
+  </defs>
+  <style>
+    .rule { fill:#ffffff; stroke:#333; stroke-width:1.3; }
+    .halt { fill:#f0f0f0; stroke:#111; stroke-width:2.2; }
+    .pass { fill:#ffffff; stroke:#111; stroke-width:2.2; }
+    .tb   { font-size:13px; fill:#111; font-weight:bold; }
+    .s    { font-size:11px; fill:#555; }
+    .out  { font-size:11.5px; fill:#333; }
+    .ln   { stroke:#333; stroke-width:1.3; fill:none; marker-end:url(#a2); }
+  </style>
+
+  <text class="s" x="18" y="22">Checked top to bottom. The first rule that matches decides, and nothing below it runs. Counts are the 80-ticket validation run.</text>
+
+  <rect class="halt" x="18" y="40"  rx="3" width="300" height="38"/>
+  <text class="tb"  x="32" y="58">automation_halted</text>
+  <text class="s"   x="32" y="72">the kill switch file is present</text>
+  <path class="ln"  d="M 318 59 L 470 59"/>
+  <text class="out" x="478" y="56">escalate, no draft attempted</text>
+  <text class="s"   x="478" y="71">0 tickets</text>
+
+  <rect class="rule" x="18" y="92" rx="3" width="300" height="38"/>
+  <text class="tb"  x="32" y="110">empty_ticket</text>
+  <text class="s"   x="32" y="124">nothing to answer</text>
+  <path class="ln"  d="M 318 111 L 470 111"/>
+  <text class="out" x="478" y="108">escalate, no draft attempted</text>
+  <text class="s"   x="478" y="123">0 tickets</text>
+
+  <rect class="rule" x="18" y="144" rx="3" width="300" height="38"/>
+  <text class="tb"  x="32" y="162">classification_unusable</text>
+  <text class="s"   x="32" y="176">the classifier degraded or the provider failed</text>
+  <path class="ln"  d="M 318 163 L 470 163"/>
+  <text class="out" x="478" y="160">escalate, no draft attempted</text>
+  <text class="s"   x="478" y="175">0 here; 6 of 6 in the outage run</text>
+
+  <rect class="halt" x="18" y="196" rx="3" width="300" height="38"/>
+  <text class="tb"  x="32" y="214">protected_category</text>
+  <text class="s"   x="32" y="228">security, compliance, feature, unclear</text>
+  <path class="ln"  d="M 318 215 L 470 215"/>
+  <text class="out" x="478" y="212">escalate, no draft attempted</text>
+  <text class="s"   x="478" y="227">14 of the 21 routed escalations</text>
+
+  <rect class="rule" x="18" y="248" rx="3" width="300" height="38"/>
+  <text class="tb"  x="32" y="266">below_threshold</text>
+  <text class="s"   x="32" y="280">confidence under 0.80</text>
+  <path class="ln"  d="M 318 267 L 470 267"/>
+  <text class="out" x="478" y="264">escalate</text>
+  <text class="s"   x="478" y="279">2, both non-fluent (Figures 3 and 4)</text>
+
+  <rect class="rule" x="18" y="300" rx="3" width="300" height="38"/>
+  <text class="tb"  x="32" y="318">no_supporting_passage</text>
+  <text class="s"   x="32" y="332">nothing cleared the relevance floor</text>
+  <path class="ln"  d="M 318 319 L 470 319"/>
+  <text class="out" x="478" y="316">escalate</text>
+  <text class="s"   x="478" y="331">1 ticket</text>
+
+  <rect class="rule" x="18" y="352" rx="3" width="300" height="38"/>
+  <text class="tb"  x="32" y="370">live_incident</text>
+  <text class="s"   x="32" y="384">high-urgency database or performance fault</text>
+  <path class="ln"  d="M 318 371 L 470 371"/>
+  <text class="out" x="478" y="368">escalate</text>
+  <text class="s"   x="478" y="383">4 tickets</text>
+
+  <rect class="pass" x="18" y="404" rx="3" width="300" height="38"/>
+  <text class="tb"  x="32" y="422">confident_and_grounded</text>
+  <text class="s"   x="32" y="436">everything that reaches the bottom</text>
+  <path class="ln"  d="M 318 423 L 470 423"/>
+  <text class="out" x="478" y="420">auto_respond: draft, then guardrails</text>
+  <text class="s"   x="478" y="435">59 drafted, of which 55 sent, 2 blocked, 2 abstained</text>
+</svg>
