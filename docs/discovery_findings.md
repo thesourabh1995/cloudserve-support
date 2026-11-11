@@ -93,10 +93,10 @@ Spread between best and worst group: **10.5 percentage points**.
 | Claim | What the data shows | Verdict |
 |---|---|---|
 | Sofia: 'seven out of ten I could answer without looking anything up' | 71.4% of tickets are answerable from the knowledge base (357 of 500) | supported |
-| Daniel: 'about half of what reaches me tier one could have resolved' | 49.1% of escalated tickets (138 of 281) were answerable from the docs | check against the figure above |
-| Marcus: 'we are at forty-two per cent' first contact resolution | 43.8% in this sample | check |
-| Sofia: non-fluent English tickets 'have our worst satisfaction scores' | fluent: 2.95; non_fluent: 3.04 | check |
-| Ravi: enterprise customers 'get answers in about an hour' | business: 141 min median; enterprise: 369 min median; standard: 266 min median | check |
+| Daniel: 'about half of what reaches me tier one could have resolved' | 49.1% of escalated tickets (138 of 281) were answerable from the docs | supported |
+| Marcus: 'we are at forty-two per cent' first contact resolution | 43.8% in this sample | supported |
+| Sofia: non-fluent English tickets 'have our worst satisfaction scores' | fluent: 2.95; non_fluent: 3.04 | contradicted |
+| Ravi: enterprise customers 'get answers in about an hour' | business: 141 min median; enterprise: 369 min median; standard: 266 min median; 37% of enterprise tickets resolved within the hour | contradicted |
 
 ## 7. Documentation coverage
 

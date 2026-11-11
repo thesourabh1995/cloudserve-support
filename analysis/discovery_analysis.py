@@ -165,30 +165,45 @@ def check_interview_claims(tickets):
         by_fluency[ticket["language_fluency"]].append(ticket["history"]["csat_rating"])
 
     by_tier = defaultdict(list)
+    tier_within_hour = defaultdict(list)
     for ticket in tickets:
-        by_tier[ticket["customer_tier"]].append(ticket["history"]["resolution_time_minutes"])
+        minutes = ticket["history"]["resolution_time_minutes"]
+        by_tier[ticket["customer_tier"]].append(minutes)
+        tier_within_hour[ticket["customer_tier"]].append(minutes <= 60)
 
+    fcr_rate = pct(sum(1 for h in history if h["first_contact_resolution"]), len(history))
+    answerable_rate = pct(answerable, len(tickets))
+    avoidable_rate = pct(len(avoidable), len(escalated))
+    fluent_csat = statistics.mean(by_fluency["fluent"])
+    non_fluent_csat = statistics.mean(by_fluency["non_fluent"])
+    enterprise_hour = pct(
+        sum(tier_within_hour["enterprise"]), len(tier_within_hour["enterprise"])
+    )
+
+    # Each verdict is derived from the figure beside it rather than typed in, so
+    # that a claim cannot be recorded as settled against a number that moved.
     claims = [
         ("Sofia: 'seven out of ten I could answer without looking anything up'",
-         f"{pct(answerable, len(tickets)):.1f}% of tickets are answerable from the "
+         f"{answerable_rate:.1f}% of tickets are answerable from the "
          f"knowledge base ({answerable} of {len(tickets)})",
-         "supported"),
+         "supported" if 65 <= answerable_rate <= 75 else "not supported"),
         ("Daniel: 'about half of what reaches me tier one could have resolved'",
-         f"{pct(len(avoidable), len(escalated)):.1f}% of escalated tickets "
+         f"{avoidable_rate:.1f}% of escalated tickets "
          f"({len(avoidable)} of {len(escalated)}) were answerable from the docs",
-         "check against the figure above"),
+         "supported" if 40 <= avoidable_rate <= 60 else "not supported"),
         ("Marcus: 'we are at forty-two per cent' first contact resolution",
-         f"{pct(sum(1 for h in history if h['first_contact_resolution']), len(history)):.1f}% "
-         f"in this sample",
-         "check"),
+         f"{fcr_rate:.1f}% in this sample",
+         "supported" if abs(fcr_rate - 42) <= 3 else "not supported"),
         ("Sofia: non-fluent English tickets 'have our worst satisfaction scores'",
          "; ".join(f"{name}: {statistics.mean(values):.2f}"
                    for name, values in sorted(by_fluency.items())),
-         "check"),
+         "contradicted" if non_fluent_csat >= fluent_csat else "supported"),
         ("Ravi: enterprise customers 'get answers in about an hour'",
          "; ".join(f"{name}: {statistics.median(values):.0f} min median"
-                   for name, values in sorted(by_tier.items())),
-         "check"),
+                   for name, values in sorted(by_tier.items()))
+         + f"; {enterprise_hour:.0f}% of enterprise tickets resolved within the hour",
+         "contradicted" if statistics.median(by_tier["enterprise"])
+         > statistics.median(by_tier["business"]) else "supported"),
     ]
 
     lines = ["| Claim | What the data shows | Verdict |", "|---|---|---|"]
