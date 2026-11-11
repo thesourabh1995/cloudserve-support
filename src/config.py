@@ -10,9 +10,22 @@ discovery analysis stop working on a machine with no key configured.
 """
 
 import os
+import sys
 from dataclasses import dataclass
 
-from dotenv import load_dotenv
+# Checked before anything else imports, because a virtual environment runs the
+# interpreter that created it: `python3 -m venv` on a machine whose python3 is
+# 3.9 produces a 3.9 environment, and the next thing the reader sees is a
+# dependency resolution failure or a TypeError on a union annotation. Neither
+# says what to do about it.
+if sys.version_info < (3, 10):
+    raise RuntimeError(
+        f"This project needs Python 3.10 or newer; this is {sys.version.split()[0]}. "
+        "A virtual environment runs whichever interpreter made it, so delete .venv "
+        "and recreate it naming the version: python3.11 -m venv .venv"
+    )
+
+from dotenv import load_dotenv  # noqa: E402  (must follow the version check)
 
 load_dotenv()
 

@@ -4,12 +4,14 @@ Local console, one ticket at a time:
 
 ```bash
 cp .env.example .env   # then set GROQ_API_KEY
-python3 -m venv .venv
+python3.11 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 .venv/bin/python -m src.api
 ```
 
-Every command below uses `.venv/bin/python` rather than `python`. This is intentional: on some systems there is no `python` on the path at all, and a system `python3` may be older than the 3.10 floor this project needs. Running the interpreter from the virtual environment by its full path avoids both and works the same everywhere.
+**Create the environment with Python 3.11 or newer, naming the version explicitly.** A virtual environment runs whichever interpreter created it, so `python3 -m venv` gives you a 3.9 environment on a machine whose `python3` is 3.9, and this project needs 3.10 or above. Any of `python3.11`, `python3.12` or `python3.13` works. Check with `.venv/bin/python -V` before installing; if it reports anything below 3.10, delete `.venv` and create it again with a named version. The code checks this too and will tell you if it is wrong.
+
+Every command below then uses `.venv/bin/python` rather than `python`, because on some systems there is no `python` on the path at all.
 
 Open http://127.0.0.1:8000. If that port is already taken, start with `PORT=8010 .venv/bin/python -m src.api` and open http://127.0.0.1:8010.
 
