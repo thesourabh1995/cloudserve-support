@@ -126,6 +126,35 @@ be claimed as met.
 **Fixed.** `outcomes.jsonl` recorded the action but not the rule, so the reason a ticket
 left the queue existed only in the database. Now carries both, with a test.
 
+**Built — the kill switch, because its absence is itself a finding.** The Governance
+Framework says so explicitly, so rather than declare the gap I built the control: a file
+whose presence halts automatic answering from the next ticket, and whose contents are the
+reason for the stop. A file rather than an environment variable, because a variable needs
+a restart and a restart is a deployment, and because the person who notices a bad answer
+at 2am usually cannot ship. The file read stays in the pipeline rather than inside
+`route()`, since reading it in the routing function would let identical inputs decide
+differently at different moments, which is what A5 forbids.
+
+**Decided — halting skips generation.** The usual reason to stop automation is that the
+drafts are wrong. Drafting more of them spends tokens on text nobody should trust and puts
+a bad suggestion in front of whoever is handling the incident. Everything else still runs,
+so the human queue receives the same context it would have had.
+
+**Surprised by — the fairness prediction was wrong in a useful way.** The framework warned
+retrieval would degrade on non-fluent English. It did not: 100% against 98%. The likely
+cause is the title-prepending decision from retrieval tuning, made for a different reason
+entirely. What showed up instead is that the model reports lower confidence on non-fluent
+tickets while classifying them *more* accurately, and all three sub-threshold tickets in
+the run were non-fluent. A threshold acting on a miscalibrated score turns that into
+unequal treatment. Two tickets of nineteen, so a signal with a mitigation rather than a
+demonstrated harm — but the direction is specific and the mechanism is identifiable.
+
+**Found — the README was written for my machine, not an assessor's.** It said "there is no
+`python` command on this machine", which is true here and meaningless on the machine that
+decides the gate. Rewritten to explain why the full interpreter path is used. This is
+exactly the class of defect the clean-checkout rehearsal exists to catch, which is an
+argument for doing that rehearsal sooner rather than on the final afternoon.
+
 **Still to decide.** The problem statement, still. Whether to report the latency target
 as missed or as a declared tradeoff. Whether the single `no_supporting_passage`
 escalation is worth relaxing to bring escalation from 31.2% to under 30%.
@@ -147,4 +176,6 @@ happens means the declaration is accurate rather than reconstructed.
 | 10 Nov | Cursor / Claude | Local console and the unattended harness | Satisfaction and hallucination stay blank in the report, because those need a human review and the run must not invent them |
 | 10 Nov | Cursor / Claude | CI workflow and the provider-outage run | Ran the outage test on uncached tickets so the response cache could not hide the failure |
 | 11 Nov | Cursor / Claude | Token-cost reduction and the per-task reasoning split | Checked the published daily token limit against the account's own headers and found it is not exposed; recorded it as unverified rather than citing it |
+| 11 Nov | Cursor / Claude | Fairness audit script and the kill switch | Rejected putting the switch behind an environment variable or a config flag, since both need a restart; kept the file read out of `route()` to preserve A5 determinism |
+| 11 Nov | Cursor / Claude | Governance document: register, incident response, declaration | Listed the three framework guardrails that are *not* built rather than implying all five are; added R-09 for the confidence miscalibration the run exposed |
 | 11 Nov | Cursor / Claude | Validation run and the analysis of its results | Declined to tune the confidence threshold or relax the protected-category rules to hit the escalation target; decomposed the tier gap rather than reporting the raw 30-point spread alone |
