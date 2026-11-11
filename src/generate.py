@@ -13,6 +13,7 @@ something a person must handle.
 from dataclasses import dataclass, field
 from typing import Optional
 
+from src.config import settings
 from src.llm import LLMClient, ModelUnavailable, extract_json
 from src.models import Ticket
 from src.prompts import load_prompt
@@ -60,6 +61,24 @@ def _abstain(reason: str, prompt_version: str = "", degraded: bool = False) -> D
     )
 
 
+def distinct_sources(passages, limit: int = None) -> list:
+    """The best passage from each of the top documents.
+
+    Retrieval returns chunks, and the top five frequently contain two or three
+    chunks of the same article. Those near-duplicates cost tokens without
+    adding evidence, and the free tier is capped in tokens. Taking the best
+    chunk per document puts more distinct material in front of the generator
+    for less, and the guardrail still resolves every citation against whatever
+    was actually retrieved.
+    """
+    limit = settings.generation_docs if limit is None else limit
+    best: dict[str, object] = {}
+    for passage in passages:
+        if passage.doc_id not in best:
+            best[passage.doc_id] = passage
+    return list(best.values())[:limit]
+
+
 def render_passages(passages) -> str:
     """One delimited block per passage, with the id the model is allowed to cite."""
     blocks = []
@@ -101,7 +120,7 @@ class Generator:
             return _abstain("no supporting passage", self.prompt.reference)
 
         rendered = self.prompt.render_user(
-            passages=render_passages(passages),
+            passages=render_passages(distinct_sources(passages)),
             channel=ticket.channel,
             subject=ticket.subject or "(none)",
             body=ticket.body,
@@ -109,7 +128,11 @@ class Generator:
 
         try:
             completion = self.client.complete(
-                prompt=rendered, system=self.prompt.system, temperature=0.0
+                prompt=rendered,
+                system=self.prompt.system,
+                temperature=0.0,
+                reasoning_effort=settings.generate_reasoning_effort,
+                task="generate",
             )
         except ModelUnavailable as error:
             return _abstain(f"model unavailable: {error}", self.prompt.reference, degraded=True)

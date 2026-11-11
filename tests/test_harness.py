@@ -87,6 +87,15 @@ def test_a_throwing_ticket_is_logged_and_the_run_continues(tmp_path):
     assert report["technical"]["retrieval_hit_rate"]["hits"] == 1
     assert (output / "metrics.md").exists()
     assert (output / "outcomes.jsonl").exists()
+
+    # Every row names the rule that decided it. Without this the outcomes file
+    # says what happened but not why, and the reader has to open the database.
+    written = [
+        json.loads(line)
+        for line in (output / "outcomes.jsonl").read_text().splitlines()
+    ]
+    assert len(written) == 2
+    assert all(row["rule"] for row in written)
     store.close()
 
 

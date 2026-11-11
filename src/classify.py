@@ -13,6 +13,7 @@ engineer when it says what the system was torn between.
 from dataclasses import dataclass, field
 from typing import Optional
 
+from src.config import settings
 from src.llm import LLMClient, ModelUnavailable, extract_json
 from src.models import UNKNOWN_INTENT, Ticket
 from src.prompts import load_prompt
@@ -129,7 +130,11 @@ class Classifier:
 
         try:
             completion = self.client.complete(
-                prompt=rendered, system=self.prompt.system, temperature=0.0
+                prompt=rendered,
+                system=self.prompt.system,
+                temperature=0.0,
+                reasoning_effort=settings.classify_reasoning_effort,
+                task="classify",
             )
         except ModelUnavailable as error:
             # A11: the provider being unreachable degrades this ticket to a

@@ -255,6 +255,24 @@ def render_markdown(report: dict) -> str:
         f"- Log reconciles: {governance['log_complete']}",
         "",
     ]
+    run = report.get("run")
+    if run:
+        lines += [
+            "## Cost of the run",
+            "",
+            f"- Model calls billed: {run['model_calls']}",
+            f"- Tokens billed: {run['tokens_billed']:,} ({run['tokens_per_ticket']} per ticket)",
+            f"- Wall clock: {run['seconds'] / 60:.1f} minutes",
+        ]
+        for task, split in (run.get("by_task") or {}).items():
+            lines.append(
+                f"  - {task}: {split['tokens']:,} tokens over {split['calls']} calls"
+            )
+        lines += [
+            "",
+            "Cache hits are excluded, so these are what the provider actually charged.",
+            "",
+        ]
     retrieval = technical.get("retrieval_hit_rate")
     if retrieval:
         lines.append(

@@ -34,6 +34,9 @@ def _row_from_outcome(outcome, latency: float, logged: bool) -> dict:
     return {
         "ticket_id": outcome.ticket.ticket_id,
         "final_action": outcome.final_action,
+        # The rule, not just the action, so a reader of the outcomes file can
+        # see why a ticket left the queue without opening the decision log.
+        "rule": outcome.decision.rule,
         "latency_seconds": latency,
         "intent": outcome.classification.intent,
         "confidence": outcome.classification.confidence,
@@ -74,6 +77,7 @@ def _record_failure(pipeline: Pipeline, raw, error: Exception) -> dict:
     return {
         "ticket_id": ticket.ticket_id,
         "final_action": "escalate",
+        "rule": decision.rule,
         "latency_seconds": None,
         "intent": classification.intent,
         "confidence": 0.0,
@@ -117,6 +121,7 @@ def run(input_path: str, output_dir: str, pipeline: Pipeline = None) -> dict:
         rows.append(row)
         print(f"{index}/{total} {row['ticket_id']} {row['final_action']}", flush=True)
 
+    usage = pipeline.usage()
     report = summarise(rows, labels)
     report["run"] = {
         "input": os.path.abspath(input_path),
@@ -124,6 +129,10 @@ def run(input_path: str, output_dir: str, pipeline: Pipeline = None) -> dict:
         "run_id": pipeline.run_id,
         "seconds": round(time.monotonic() - started, 3),
         "log_reconciles": pipeline._log().reconcile(pipeline.run_id, total)["complete"],
+        "model_calls": usage["calls"],
+        "tokens_billed": usage["tokens"],
+        "tokens_per_ticket": round(usage["tokens"] / total, 1) if total else 0,
+        "by_task": usage.get("by_task", {}),
     }
     report["governance"]["log_complete"] = report["run"]["log_reconciles"]
     report["governance"]["decisions_logged"] = pipeline._log().count(pipeline.run_id)
@@ -138,7 +147,8 @@ def run(input_path: str, output_dir: str, pipeline: Pipeline = None) -> dict:
 
     print(
         f"processed {total}, logged {report['governance']['decisions_logged']}, "
-        f"reconciles {report['run']['log_reconciles']}",
+        f"reconciles {report['run']['log_reconciles']}, "
+        f"{usage['calls']} model calls, {usage['tokens']} tokens",
         flush=True,
     )
     return report

@@ -84,6 +84,21 @@ class Settings:
     chunk_size: int = _int("CHUNK_SIZE", 800)
     chunk_overlap: int = _int("CHUNK_OVERLAP", 120)
 
+    # How many distinct documents are put in front of the generator. Retrieval
+    # returns chunks, and several of the top five are often from one article;
+    # sending near-duplicates spends tokens without adding evidence.
+    generation_docs: int = _int("GENERATION_DOCS", 3)
+
+    # Reasoning models bill their hidden reasoning as output tokens, and that
+    # reasoning was two thirds of the cost of a run. The setting differs by
+    # task rather than globally: classification is a short prompt whose
+    # accuracy decides every downstream step, so it pays for more reasoning,
+    # while generation is the token-heavy call and its output is checked by
+    # the citation guardrail regardless. Measured in docs/run_cost.md.
+    # Empty disables the parameter.
+    classify_reasoning_effort: str = os.getenv("CLASSIFY_REASONING_EFFORT", "medium")
+    generate_reasoning_effort: str = os.getenv("GENERATE_REASONING_EFFORT", "low")
+
     # Routing. The pack's diagram shows 0.80 and says the number is illustrative.
     # It stays at 0.80 until a full classification pass produces a confidence
     # distribution to calibrate against. See docs/routing_rules.md.

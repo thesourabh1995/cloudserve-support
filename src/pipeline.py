@@ -10,13 +10,34 @@ from dataclasses import asdict, dataclass
 
 from src.classify import Classifier
 from src.config import settings
-from src.generate import Draft, Generator
+from src.generate import ABSTAIN, Draft, Generator
 from src.guardrails import GuardrailReport, release, review
 from src.ingest import normalise_ticket
+from src.llm import LLMClient
 from src.logging_store import DecisionLog
 from src.models import Ticket
 from src.retrieve import Retriever
 from src.route import AUTO_RESPOND, route
+
+
+# Escalations where drafting a reply would spend a model call on something no
+# one can use. The brief asks escalations to carry a drafted summary, and they
+# do for the cases where the system understood the ticket and simply was not
+# confident enough to send its answer. These are the other cases: a category
+# that must never be answered automatically, a ticket we could not classify,
+# and a ticket with no text. The retrieved sources are still attached, since
+# those cost nothing further.
+NO_DRAFT_RULES = frozenset({"protected_category", "classification_unusable", "empty_ticket"})
+
+
+def skip_draft(rule: str) -> Draft:
+    """A recorded non-answer, so the row still says why nothing was drafted."""
+    return Draft(
+        answer=ABSTAIN,
+        citations=[],
+        known=False,
+        reason=f"no draft attempted: {rule}",
+    )
 
 
 @dataclass
@@ -108,10 +129,33 @@ class Pipeline:
         self.generator = generator
         self.decision_log = decision_log
         self.run_id = run_id
+        self._client = None
+
+    def client(self) -> LLMClient:
+        """One model client for the whole run.
+
+        Shared so that the token and call totals cover classification and
+        generation together, which is what the free-tier budget is spent on.
+        """
+        if self._client is None:
+            self._client = LLMClient()
+        return self._client
+
+    def usage(self) -> dict:
+        if self._client is None:
+            return {"tokens": 0, "calls": 0, "by_task": {}}
+        return {
+            "tokens": self._client.tokens_used,
+            "calls": self._client.calls_made,
+            "by_task": {
+                task: {"tokens": tokens, "calls": self._client.calls_by_task.get(task, 0)}
+                for task, tokens in sorted(self._client.tokens_by_task.items())
+            },
+        }
 
     def _classifier(self) -> Classifier:
         if self.classifier is None:
-            self.classifier = Classifier()
+            self.classifier = Classifier(client=self.client())
         return self.classifier
 
     def _retriever(self) -> Retriever:
@@ -121,7 +165,7 @@ class Pipeline:
 
     def _generator(self) -> Generator:
         if self.generator is None:
-            self.generator = Generator()
+            self.generator = Generator(client=self.client())
         return self.generator
 
     def _log(self) -> DecisionLog:
@@ -139,7 +183,12 @@ class Pipeline:
         classification = self._classifier().classify(ticket)
         passages = [] if ticket.is_empty else self._retriever().search(ticket.text)
         decision = route(ticket, classification, passages)
-        draft = self._generator().draft(ticket, passages)
+
+        if decision.rule in NO_DRAFT_RULES:
+            draft = skip_draft(decision.rule)
+        else:
+            draft = self._generator().draft(ticket, passages)
+
         report = review(draft, passages)
         final_action, sent = _final_action(decision, draft, report)
 
