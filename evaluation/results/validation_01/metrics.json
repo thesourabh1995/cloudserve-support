@@ -1,0 +1,249 @@
+{
+  "volume": {
+    "tickets_processed": 80,
+    "answered_automatically": 55,
+    "escalated": 23,
+    "blocked_by_guardrails": 2
+  },
+  "business": {
+    "first_contact_resolution": 0.6875,
+    "escalation_rate": 0.3125,
+    "reply_time_seconds": {
+      "mean": 7.472308646972206,
+      "median": 8.359417707892135,
+      "p95": 13.066192833939567,
+      "n": 55
+    }
+  },
+  "technical": {
+    "latency_seconds": {
+      "mean": 7.038341364072403,
+      "median": 7.819597437977791,
+      "p95": 13.200433750171214,
+      "n": 80
+    },
+    "citation_accuracy": 0.9803921568627451,
+    "citations_offered": 102,
+    "citations_resolved": 100,
+    "classification": {
+      "accuracy": 0.9125,
+      "per_class": {
+        "account_access": {
+          "precision": 0.5,
+          "recall": 0.25,
+          "support": 4
+        },
+        "api_key_issue": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 6
+        },
+        "api_usage_question": {
+          "precision": 0.75,
+          "recall": 0.75,
+          "support": 4
+        },
+        "authentication_failure": {
+          "precision": 1.0,
+          "recall": 0.6666666666666666,
+          "support": 3
+        },
+        "billing_query": {
+          "precision": 0.9090909090909091,
+          "recall": 1.0,
+          "support": 10
+        },
+        "compliance_request": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 1
+        },
+        "configuration_help": {
+          "precision": 0.5,
+          "recall": 1.0,
+          "support": 3
+        },
+        "data_export": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 1
+        },
+        "data_residency": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 6
+        },
+        "database_issue": {
+          "precision": 0.5,
+          "recall": 1.0,
+          "support": 1
+        },
+        "deployment_failure": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 5
+        },
+        "feature_request": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3
+        },
+        "integration_help": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3
+        },
+        "onboarding": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 4
+        },
+        "performance_degradation": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3
+        },
+        "quota_or_overage": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "support": 2
+        },
+        "rate_limit": {
+          "precision": null,
+          "recall": 0.0,
+          "support": 1
+        },
+        "rollback_request": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 6
+        },
+        "security_incident": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 4
+        },
+        "sso_configuration": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 1
+        },
+        "unclear_request": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 6
+        },
+        "webhook_issue": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3
+        }
+      },
+      "evaluated": 80
+    },
+    "retrieval_hit_rate": {
+      "hit_rate": 0.9811320754716981,
+      "eligible": 53,
+      "hits": 52
+    }
+  },
+  "governance": {
+    "decisions_logged": 80,
+    "log_complete": true,
+    "guardrail_activations": {
+      "unsupported_claim": 2
+    },
+    "private_data_in_outbound_replies": 0,
+    "confidence_calibration": [
+      {
+        "from": 0.6,
+        "to": 0.8,
+        "n": 3,
+        "stated_confidence": 0.6999999999999998,
+        "observed_accuracy": 0.6666666666666666,
+        "gap": 0.033333333333333215
+      },
+      {
+        "from": 0.8,
+        "to": 1.0,
+        "n": 77,
+        "stated_confidence": 0.9038961038961039,
+        "observed_accuracy": 0.922077922077922,
+        "gap": -0.018181818181818188
+      }
+    ],
+    "quality_by_group": {
+      "customer_tier": {
+        "groups": {
+          "business": {
+            "n": 30,
+            "first_contact_resolution": 0.8
+          },
+          "enterprise": {
+            "n": 8,
+            "first_contact_resolution": 0.875
+          },
+          "standard": {
+            "n": 42,
+            "first_contact_resolution": 0.5714285714285714
+          }
+        },
+        "spread": 0.3035714285714286
+      },
+      "customer_region": {
+        "groups": {
+          "asia_pacific": {
+            "n": 21,
+            "first_contact_resolution": 0.7142857142857143
+          },
+          "europe": {
+            "n": 25,
+            "first_contact_resolution": 0.68
+          },
+          "latin_america": {
+            "n": 7,
+            "first_contact_resolution": 0.42857142857142855
+          },
+          "north_america": {
+            "n": 27,
+            "first_contact_resolution": 0.7407407407407407
+          }
+        },
+        "spread": 0.31216931216931215
+      },
+      "language_fluency": {
+        "groups": {
+          "fluent": {
+            "n": 61,
+            "first_contact_resolution": 0.7213114754098361
+          },
+          "non_fluent": {
+            "n": 19,
+            "first_contact_resolution": 0.5789473684210527
+          }
+        },
+        "spread": 0.14236410698878343
+      }
+    }
+  },
+  "run": {
+    "input": "/Users/jarvis/Downloads/FDE_Capstone_Complete/cloudserve-support/data/validation_tickets.json",
+    "tickets": 80,
+    "run_id": "harness-20261111T053549Z",
+    "seconds": 563.075,
+    "log_reconciles": true,
+    "model_calls": 130,
+    "tokens_billed": 117751,
+    "tokens_per_ticket": 1471.9,
+    "by_task": {
+      "classify": {
+        "tokens": 62265,
+        "calls": 72
+      },
+      "generate": {
+        "tokens": 55486,
+        "calls": 58
+      }
+    }
+  }
+}
