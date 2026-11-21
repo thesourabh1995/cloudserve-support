@@ -1,16 +1,16 @@
 # Stage 4 — Sprint plan
 
-Written as a plan in `PROJECT_PLAN.md` before the build and recorded here with what actually happened against it. The delivery plan was triaged from the outset: the available time was roughly a third of what the pack is written for, so the plan protected the pass/fail gate and the highest-weight marks and deliberately made some sections thin.
+Written as a plan in `docs/project_plan.md` on 5 November, before any code existed, and recorded here with what actually happened against it. That file is included in the repository unaltered, still carrying the original 15 November deadline, so the estimates below can be read against the plan that produced them rather than against a tidied version of it. The delivery plan was triaged from the outset: the available time was roughly a third of what the pack is written for, so the plan protected the pass/fail gate and the highest-weight marks and deliberately made some sections thin.
 
 ## 1. Capacity
 
-| Week | Hours realistically available | Other commitments | Days unavailable |
+| Week | Hours realistically available | Hours actually worked | Days unavailable |
 |---|---|---|---|
-| Week one (6–8 Nov) | ~4/day planned | *to be completed from your own record* | — |
-| Week two (9–15 Nov) | ~4/day planned, 6–8 on the final day | *to be completed* | — |
-| Week three | Not available — the deadline falls on 15 November | — | — |
+| Week one (6–8 Nov) | ~4/day planned | 3.0, all on 8 Nov | 6–7 Nov |
+| Week two (9–15 Nov) | ~4/day planned, 6–8 on the final day | 12.75 across 10, 11 and 12 Nov | 9, 13–15 Nov |
+| Week three (16–22 Nov) | Exists only because the deadline moved to 22 Nov | 0.5 on 20 Nov, with the video and packaging to come | 16–19 Nov |
 
-**Planned total: ~40 hours against a programme written for roughly three times that.** Actual hours belong in the effort log and only you can supply them; the commit history shows concentrated work on 8, 10 and 11 November rather than evenly spread, which is worth stating honestly rather than smoothing.
+**Planned total: ~40 hours against a programme written for roughly three times that. Actual: 16.25 hours**, recorded task by task in `docs/effort_log.md` and derived there from commit timestamps and run-artefact times. The commit history shows concentrated work on 8, 10 and 11 November rather than evenly spread, which is worth stating honestly rather than smoothing. The gap between the two totals is almost entirely in the build items, which were estimated for hand-written code and delivered with AI assistance; the estimates were never revised to reflect that.
 
 Working alone removes coordination overhead and replaces it with nobody noticing when you are stuck. The rule adopted was to write down anything blocking for more than an hour; in practice the blockers that cost most — the provider retiring its Llama models, and the response cache serving tests each other's answers — were recorded in `docs/report_notes.md` as they happened, which is why they could be written up accurately afterwards.
 
@@ -38,7 +38,7 @@ Priority: **M** must, **S** should, **C** could.
 | B-16 | Clean-checkout rehearsal | 1.0 | M | B-12 | Fresh clone, README followed literally, run completes | Done early. Found two gate-breaking defects |
 | B-17 | Hallucination review | 2.0 | M | B-13 | At least fifty replies scored against the rubric | **Sheet built, scoring outstanding** |
 | B-18 | Workbooks and PRD revision | 4.0 | M | B-13 | All five stages complete; revision has a real trigger | Stages 1–5 drafted |
-| B-19 | Report | 3.0 | M | B-18 | Ten prescribed sections, every figure referenced | **Outstanding** |
+| B-19 | Report | 3.0 | M | B-18 | Ten prescribed sections, every figure referenced | Done. 27 pages against a 20–30 limit; the build refuses to produce a PDF if a figure is not paired with its caption |
 | B-20 | Video | 2.5 | M | B-19 | 20 minutes, 7+ of real demo, author on camera | **Outstanding** |
 | B-21 | Packaging and submission | 1.0 | M | B-19, B-20 | Four top-level folders, history scanned for credentials | **Outstanding** |
 | B-22 | Prometheus counters endpoint | 0.5 | C | B-10 | Endpoint serves counters | **Dropped.** No acceptance criterion needs it |

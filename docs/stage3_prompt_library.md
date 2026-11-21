@@ -51,7 +51,7 @@ Temperature is fixed at 0 by the caller. A sampled classification would route th
 
 ### Categories not used
 
-Specification, review and evaluation prompts were not used. Specifications were written directly, review was done by reading and by the test suite, and evaluation is measured by code against labels rather than judged by a model. Using a model to grade its own output would make the evaluation depend on the thing being evaluated; the one judgement that genuinely needs a human — hallucination rate — is done by hand in `docs/hallucination_review.md`.
+Specification, review and evaluation prompts were not used. Specifications were written directly, review was done by reading and by the test suite, and evaluation is measured by code against labels rather than judged by a model. Using a model to grade its own output would make the evaluation depend on the thing being evaluated; the one judgement that genuinely needs a human — hallucination rate — is done by hand on the sheet that `analysis/hallucination_review.py` generates.
 
 ## 3. Prompt text
 

@@ -35,5 +35,19 @@ evaluation/results/**
 !evaluation/results/outage/metrics.json
 !evaluation/results/outage/outcomes.jsonl
 
-# Build intermediate for the report PDF.
+# The hallucination review sheet is excluded for the same reason as decisions.db
+# above: it places all 59 drafted replies beside the tickets that produced them,
+# carrying each ticket's subject and body, so committing it to a public repository
+# would republish the course's validation set in another form. The sheet is a
+# generated artefact — analysis/hallucination_review.py rebuilds it from a results
+# directory — and the scored version is submitted in 03_Workbooks rather than here.
+docs/hallucination_review.md
+
+# Typeset output. The markdown in docs/ is the source; the PDFs are built from it
+# by a script kept outside the repository so requirements.txt stays exactly what
+# the acceptance gate installs. The report ships in 02_Report and the workbooks
+# and effort log in 03_Workbooks, so committing the built copies here would mean
+# two versions of each deliverable that can drift apart.
 docs/report.html
+docs/report.pdf
+docs/workbooks/

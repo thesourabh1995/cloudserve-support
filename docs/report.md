@@ -1,7 +1,7 @@
 ---
 title: "Closing the distance between a question and its answer"
 subtitle: "An intelligent support triage system for CloudServe Technologies"
-author: "thesourabh1995"
+author: "Sourabh Mishra"
 date: "November 2026"
 ---
 
@@ -10,7 +10,8 @@ date: "November 2026"
 **An intelligent support triage system for CloudServe Technologies**
 
 Forward Deployed AI Engineering, capstone project<br>
-Author: thesourabh1995<br>
+Author: Sourabh Mishra<br>
+Contact: sourabhmishra2708@gmail.com<br>
 Submitted November 2026<br>
 Repository: `github.com/thesourabh1995/cloudserve-support`
 
@@ -229,7 +230,7 @@ FR-03 requires confidence to express the probability that the intent is correct 
 
 **Figure 1. The processing path for one ticket.** Solid arrows are the ticket's path; dashed arrows are reads and writes against stores. The two components with heavy borders — routing and the guardrails — are the ones that can stop a reply from being sent.
 
-A ticket enters through `src/ingest.py`, which normalises the four channel formats into a single `Ticket` and drops `customer_name` at that boundary so personal data cannot reach a prompt, a log or an outbound reply. Classification assigns an intent from the fixed 22-value taxonomy, an urgency and a numeric confidence, using prompt PR-01. Retrieval searches the indexed corpus for passages related by meaning. Routing then decides, from the classification and the retrieved passages alone, whether the ticket is answered or handed to a person. Where it is answered, generation drafts a reply grounded only in those passages using prompt PR-02, and two guardrails check the result before anything is sent. Every outcome, including every blocked and every escalated ticket, is written to a SQLite decision log.
+Figure 1 traces that path, and the two components drawn with heavy borders are the only ones that can stop a reply. A ticket enters through `src/ingest.py`, which normalises the four channel formats into a single `Ticket` and drops `customer_name` at that boundary so personal data cannot reach a prompt, a log or an outbound reply. Classification assigns an intent from the fixed 22-value taxonomy, an urgency and a numeric confidence, using prompt PR-01. Retrieval searches the indexed corpus for passages related by meaning. Routing then decides, from the classification and the retrieved passages alone, whether the ticket is answered or handed to a person. Where it is answered, generation drafts a reply grounded only in those passages using prompt PR-02, and two guardrails check the result before anything is sent. Every outcome, including every blocked and every escalated ticket, is written to a SQLite decision log.
 
 The sequence is deliberately linear and the components are deliberately separate. The alternative the project brief illustrates is a LangGraph state machine, and it was rejected: at this scale, an explicit pipeline through six components is legible and testable, and a framework earns its cost when branching becomes genuinely dynamic — realistically, when conversation becomes multi-turn. The brief itself notes that following the illustrated architecture without explaining why is "not really designing anything," and the cost of the explicit version is that `src/pipeline.py` carries the orchestration by hand, which section 6.4 records as the thing most worth restructuring.
 
@@ -269,7 +270,7 @@ The failure path is more interesting than the success path. If the provider is u
 
 Routing is a pure function in `src/route.py`. It takes a ticket, a classification, the retrieved passages, a threshold and a halt status, and returns an action and a reason. The same inputs always produce the same output, which is what acceptance criterion A5 checks by running the same ticket twice.
 
-The ordering of the rules is itself a design decision, because the first match wins and therefore determines the reason a support manager reads. The reason is ordered most-specific-first, so a security incident that also fell below the confidence threshold is reported as a protected category rather than as low confidence — the former is the accurate account of why it will never be automated.
+The ordering of the rules is itself a design decision, because the first match wins and therefore determines the reason a support manager reads. Figure 2 gives that order with what each rule did on the validation run. The reason is ordered most-specific-first, so a security incident that also fell below the confidence threshold is reported as a protected category rather than as low confidence — the former is the accurate account of why it will never be automated.
 
 A deliberate narrowness in `live_incident` is worth noting. It fires only on high-urgency `database_issue` and `performance_degradation`, not on every high-urgency ticket. The development labels do not treat urgency alone as grounds for escalation, and widening the rule would escalate work the data expects to be answered: a high-urgency `deployment_failure` is answered when it is grounded.
 
@@ -327,7 +328,7 @@ Ingest and retrieval came first and were verified against all 580 tickets in bot
 
 **Sentence-transformers contacts the Hugging Face Hub on construction even when the weights are already cached**, which turns a disconnected network into a hard retrieval failure rather than a degraded one. The encoder now falls back to `local_files_only=True`. This is directly relevant to acceptance criterion A11, because an outage test that only disconnects the language model provider would not have caught it.
 
-**The routing rule was missing from the machine-readable output.** `outcomes.jsonl` recorded the action but not the rule that produced it, so the reason a ticket left the queue existed only inside the SQLite log. For a file whose purpose is downstream analysis, that is a traceability gap rather than a cosmetic one. It was fixed in both the success and the failure paths, with a regression test asserting that every outcome row carries a rule.
+**The routing rule was missing from the machine-readable output.** `outcomes.jsonl` recorded the action but not the rule that produced it, so the reason a ticket left the queue existed only inside the SQLite log. For a file whose purpose is downstream analysis, that is a traceability gap rather than a cosmetic one. It was fixed in both the success and the failure paths, with a regression test asserting that every outcome row carries a rule. One consequence should be stated rather than left for a reader to find: the two `outcomes.jsonl` files committed under `evaluation/results/` were written by the run of 11 November, which predates the fix, and so they do not carry the field. Regenerating them would mean repeating the evaluation run, and every figure in section 7 comes from that single run on the explicit undertaking that it was executed once and not repeated. Keeping the stale artefact and saying so is the lesser of the two compromises; any run made from the current code carries the rule, as the test enforces.
 
 **The run did not fit the free tier**, and that is the one that would have failed the gate. Section 6.3 covers it.
 
@@ -417,13 +418,13 @@ The 95th-percentile latency of 13.2 seconds against a 3-second target is the cle
 
 On the headline measure, the share of tickets answered without a person, the system fails the under-five-points condition on every dimension examined: 30.4 points across customer tier, 31.2 across region, 45.5 across ticket length and 14.2 across language fluency. Reporting only that would be accurate and useless, because a gap in outcomes is unfair when the system causes it and ordinary when the groups send different tickets. Separating those two cases requires looking at each stage of the pipeline independently, since a system that discriminated would degrade at the stage where it reads the text.
 
-Across every dimension, the stages are flat. Retrieval hit rate sits between 93% and 100% in every group, classification accuracy between 86% and 100%, and citation resolution between 95% and 100%, with overlapping confidence intervals throughout. The variation appears only at the routing decision, which is where ticket content is supposed to change the outcome. This is corroborated structurally as well as statistically: `src/route.py` reads none of `customer_tier`, `customer_region` or `language_fluency`, so there is no path by which those attributes could influence a decision.
+Across every dimension, the stages are flat. Retrieval hit rate sits between 93% and 100% in every group, classification accuracy between 86% and 100%, and citation resolution between 95% and 100%, with overlapping confidence intervals throughout. The variation appears only at the routing decision, which is where ticket content is supposed to change the outcome. The structural corroboration is firmer than the statistical one: `src/route.py` reads none of `customer_tier`, `customer_region` or `language_fluency`, so no path exists by which those attributes could influence a decision. Figure 4 puts each group's escalation rate beside the share of its tickets that policy forbids answering automatically, which is the comparison that separates the two explanations.
 
 ![Figure 4](figures/fig4_fairness.svg)
 
 **Figure 4. Tickets not answered automatically, against the share the policy says must never be answered automatically.** For customer tier and ticket length the two bars track each other: groups that are escalated more are groups that send more protected-category tickets. For language fluency they do not.
 
-**Table 9. Fairness segmentation from the validation run, with 95% Wilson intervals.**
+**Table 9. Fairness segmentation from the validation run, with 95% Wilson intervals. The four region segments behave the same way and are omitted here for space; the complete segmentation is in Appendix C.**
 
 | Dimension | Group | n | Answered automatically | Classification accuracy | Retrieval hit rate |
 |---|---|---:|---|---|---|
@@ -432,23 +433,17 @@ Across every dimension, the stages are flat. Retrieval hit rate sits between 93%
 | Tier | enterprise\* | 8 | 88% (53–98) | 88% (53–98) | 100% (61–100) |
 | Fluency | fluent | 61 | 72% (60–82) | 90% (80–95) | 98% (88–100) |
 | Fluency | non_fluent | 19 | 58% (36–77) | 95% (75–99) | 100% (70–100) |
-| Region | north_america | 27 | 74% (55–87) | 89% (72–96) | 93% (69–99) |
-| Region | europe | 25 | 68% (48–83) | 92% (75–98) | 100% (83–100) |
-| Region | asia_pacific | 21 | 71% (50–86) | 90% (71–97) | 100% (82–100) |
-| Region | latin_america\* | 7 | 43% (16–75) | 100% (65–100) | 100% (44–100) |
 | Length | medium, 20–39 words | 56 | 73% (60–83) | 95% (85–98) | 98% (87–100) |
 | Length | short, under 20 words | 22 | 55% (35–73) | 86% (67–95) | 100% (74–100) |
 | Length | long, 40+ words\* | 2 | 100% (34–100) | 50% (9–91) | 100% (34–100) |
 
 \* Fewer than 15 tickets. Reported for completeness and not relied on; at this size a single ticket moves the rate by more than the five-point condition.
 
-For tier, region and length, the gap decomposes to content. The clearest case is ticket length: short tickets are answered automatically 55% of the time against 73% for medium ones, but 36% of short tickets are labelled must-not-auto-respond against 11% of medium ones. A ticket under twenty words is frequently an unclear request, and policy says an unclear request goes to a person. The same pattern holds for tier — 26% of standard-tier tickets carry a protected-category intent against 7% of business-tier ones, and 11 of the 14 protected-category escalations were standard tier.
+Table 9 gives the segmentation stage by stage, and for tier, region and length the gap decomposes to content. Ticket length is the clearest case: short tickets are answered automatically 55% of the time against 73% for medium ones, but 36% of them are labelled must-not-auto-respond against 11% of medium ones, because a ticket under twenty words is frequently an unclear request and policy sends those to a person. Tier behaves the same way — 26% of standard-tier tickets carry a protected-category intent against 7% of business-tier ones, and 11 of the 14 protected-category escalations were standard tier.
 
-Two caveats belong with that decomposition rather than after it. "Explained by content" is not the same as "acceptable": standard-tier customers do wait longer for an answer, whatever the reason, and whether that is tolerable is a policy question for CloudServe rather than one this audit can settle. And the ranking between enterprise and business in Table 9 is not meaningful at eight tickets.
+Two caveats belong with that decomposition rather than after it. "Explained by content" is not the same as "acceptable": standard-tier customers do wait longer for an answer whatever the reason, and whether that is tolerable is a policy question for CloudServe rather than one this audit can settle. And the ranking between enterprise and business is not meaningful at eight tickets.
 
-**Language fluency is different, and it is the finding.** The Governance Framework predicts that retrieval will degrade on non-fluent English because the phrasing stops matching the documentation. It did not: the retrieval hit rate on non-fluent tickets was 100% against 98% on fluent ones. The most likely reason is the title-prepending decision from section 5.2, taken for an unrelated purpose, which appears to have absorbed the effect the framework warned about.
-
-What appeared instead was not predicted, and Table 10 shows it by looking at the mechanism rather than the outcome.
+**Language fluency is different, and it is the finding.** The Governance Framework predicts that retrieval will degrade on non-fluent English because the phrasing stops matching the documentation. It did not: the hit rate on non-fluent tickets was 100% against 98% on fluent ones, most likely because of the title-prepending decision from section 5.2, taken for an unrelated purpose. What appeared instead was not predicted, and Table 10 shows it by looking at the mechanism rather than the outcome.
 
 **Table 10. Language fluency, mechanism rather than outcome.**
 
@@ -460,9 +455,9 @@ What appeared instead was not predicted, and Table 10 shows it by looking at the
 | Mean stated confidence | 0.907 | **0.863** |
 | Escalated below the confidence threshold | 0 | **2** |
 
-The protected-category base rate is essentially identical across the two groups, so content does not account for the gap. Non-fluent tickets are classified *more* accurately, and yet the model reports *lower* confidence on them, and all three tickets in the entire run scoring below the 0.80 threshold were non-fluent. The confidence threshold then converts that under-confidence into escalation. The model is reading non-native phrasing as uncertainty when its own answers show that it is not uncertain, and because the threshold acts on stated confidence, miscalibration that correlates with a protected attribute becomes unequal treatment directly.
+The protected-category base rate is essentially identical across the two groups, so content does not account for this gap. Non-fluent tickets are classified *more* accurately, yet the model reports *lower* confidence on them, and all three tickets in the run scoring below the 0.80 threshold were non-fluent. The model is reading non-native phrasing as uncertainty when its own answers show it is not uncertain, and because the threshold acts on stated confidence, miscalibration that correlates with a protected attribute becomes unequal treatment directly.
 
-The honest size of the effect is two tickets out of nineteen. The interval on that rate is wide and it would not survive a significance test, so it is reported as a signal to watch with a named mitigation rather than as a demonstrated harm. It is reported because the direction is specific, the mechanism is identifiable, and a larger run could confirm or dismiss it cheaply.
+The honest size of the effect is two tickets out of nineteen, an interval far too wide to survive a significance test, so it is reported as a signal to watch with a named mitigation rather than as a demonstrated harm. It is reported at all because the direction is specific, the mechanism is identifiable, and a larger run could settle it cheaply.
 
 The mitigation follows from the mechanism and is the opposite of the reflex. The reflex on finding that a safety threshold is implicated is to raise it. Here that would escalate correctly-classified non-fluent tickets at a higher rate than fluent ones, widening the disparity while appearing more cautious. The right response is to stop treating confidence as a gate at all, which the next section explains is justified on grounds that have nothing to do with fairness.
 
@@ -480,7 +475,7 @@ The practical consequence is that the safety of this system rests on the groundi
 
 Customer satisfaction and the hallucination rate are blank in every automated report this system produces, and that is a design decision rather than an oversight. The Evaluation Framework requires satisfaction to be scored by human review against a published rubric, and the hallucination rate to be scored over at least fifty replies by two independent assessors with an agreement rate reported. A harness that invented either would produce a number that looks like a measurement and is not.
 
-A review sheet has been prepared for the hallucination assessment: `docs/hallucination_review.md` places all 59 drafted replies beside the full text of the articles they cite, so that scoring requires judgement rather than lookup. An individual project can supply one assessor and no agreement rate, so the figure, when scored, will carry that limitation explicitly. It is the measure that would decide whether this system should go in front of customers, and this project cannot produce it to the standard the framework asks for.
+A review sheet has been prepared for the hallucination assessment: it places all 59 drafted replies beside the full text of the articles they cite, so that scoring requires judgement rather than lookup. The sheet itself is not committed, because it reproduces each ticket's subject and body and this repository is public — the same reason the decision log and the course ticket sets are excluded, recorded in `.gitignore`. It is generated by `analysis/hallucination_review.py --run` from a results directory, and the completed sheet is submitted in `03_Workbooks`. An individual project can supply one assessor and no agreement rate, so the figure, when scored, will carry that limitation explicitly. It is the measure that would decide whether this system should go in front of customers, and this project cannot produce it to the standard the framework asks for.
 
 ### 7.8 Cost and resilience
 
@@ -639,6 +634,8 @@ AI tooling was used substantially throughout this project, as the project instru
 
 It wrote the majority of the implementation code across `src/`, `evaluation/`, `analysis/` and `tests/`, from specifications and design decisions I set, and it drafted the documentation in `docs/` including the discovery findings prose, the PRD, the governance document, the fairness audit, the problem statement and this report. A session-by-session log of what it was used for, and what I changed or overrode, is maintained in `docs/report_notes.md` and was written as the work happened rather than reconstructed afterwards.
 
+One later use belongs here rather than in a footnote. The effort log submitted in `03_Workbooks` was compiled on 20 November with the same tooling, from the commit timestamps in this repository, the modification times of the run artefacts, and the dated session entries in `docs/report_notes.md`. It was not kept live during the work, and it says so at its head: the rows that are anchored to a timestamp are distinguished from the four that are apportioned from session boundaries. The guide warns that a log reconstructed from memory is obvious, and the honest position is that this one was reconstructed from evidence rather than from memory, with the method stated so a reader can check it against `git log` rather than take it on trust.
+
 The places where its output was overridden are the ones worth naming, because they are where the engineering judgement sits. It proposed OpenRouter as the provider default; I rejected it after checking its 50-requests-per-day free limit against the roughly 800 calls a full run needs. It proposed Chroma's default L2 distance; I changed it to cosine. It would have cited the published 200,000-tokens-per-day allowance as fact; I checked the account's own rate-limit headers, found no daily token limit is exposed at all, and recorded the figure as unverified. It initially wrote the interview-claim verdicts as hardcoded placeholders; I required them to be computed, which turned two of them into the contradicted findings in Table 3. It proposed putting the kill switch behind an environment variable or a configuration flag; I rejected both because each needs a restart. And it would have reported the satisfaction and hallucination figures as zero or omitted them; I required them to stay blank, because a harness that invents a number produces something that looks like a measurement and is not.
 
 The judgements this report rests on — the reframe away from a chatbot, the decision not to relax a protected-category rule to hit the escalation target, the decision not to raise the confidence threshold once it was shown to be miscalibrated, and the decision to report the fluency signal at two tickets out of nineteen rather than suppress it as noise — are mine, and I can defend each of them without the tool.
@@ -647,7 +644,7 @@ The judgements this report rests on — the reframe away from a chatbot, the dec
 
 ## Appendices
 
-**Appendix A — Stage workbooks.** The five completed stage workbooks are submitted in `03_Workbooks`: Stage 1 discovery, the Stage 2 product requirements document, the Stage 3 prompt library, the Stage 4 sprint plan, and the Stage 5 revision log. Their source form in the repository is `docs/stage1_discovery.md`, `docs/prd.md`, `docs/stage3_prompt_library.md`, `docs/stage4_sprint_plan.md` and `docs/prd_revision_log.md`.
+**Appendix A — Stage workbooks.** The five completed stage workbooks are submitted in `03_Workbooks`: Stage 1 discovery, the Stage 2 product requirements document, the Stage 3 prompt library, the Stage 4 sprint plan, and the Stage 5 revision log. Their source form in the repository is `docs/stage1_discovery.md`, `docs/prd.md`, `docs/stage3_prompt_library.md`, `docs/stage4_sprint_plan.md` and `docs/prd_revision_log.md`. The effort log is submitted in the same folder and its source is `docs/effort_log.md`; section 10.5 explains how it was compiled. The delivery plan the sprint plan was written against is preserved unaltered as `docs/project_plan.md`, still carrying the original deadline it was written to.
 
 **Appendix B — Requirements revision log in full.** `docs/prd_revision_log.md`, covering the six changed and three added requirements, all eight tested assumptions with their outcomes, the five things that looked wrong and were deliberately left alone, and the Stage 5 reflection.
 
